@@ -7,8 +7,6 @@
 *.dll
 *.so
 *.dylib
-*.DS_Store
-/my-issue2md
 
 # Test binary, built with `go test -c`
 *.test
@@ -33,5 +31,11 @@ go.work.sum
 # .idea/
 # .vscode/
 
-# claude
+# OS-specific
+.DS_Store
+
+# Project-specific
+/my-issue2md
+
+# Claude Code local settings
 .claude/settings.local.json
