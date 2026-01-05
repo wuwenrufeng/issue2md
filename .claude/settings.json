@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "plan",
     "allow": [
       "Read(*.go)",
       "Read(go.mod)",
@@ -19,6 +18,14 @@
       "Bash(goimports:*)",
       "Bash(golangci-lint:run:*)"
     ],
+    "deny": [
+      "Read(./.env*)",
+      "Read(*.pem)",
+      "Read(*.key)",
+      "Bash(rm:*)",
+      "Bash(git:push:*)",
+      "WebFetch"
+    ],
     "ask": [
       "Write",
       "Edit",
@@ -28,13 +35,19 @@
       "Bash(git:add:*)",
       "Bash(git:commit:*)"
     ],
-    "deny": [
-      "Read(./.env*)",
-      "Read(*.pem)",
-      "Read(*.key)",
-      "Bash(rm:*)",
-      "Bash(git:push:*)",
-      "WebFetch"
+    "defaultMode": "plan"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=$(jq -r '.tool_input.file_path'); case $FILE in *.go) gofmt -w $FILE 2>&1 && goimports -w $FILE 2>&1 && jq -n --arg f \"$FILE\" '{message: (\"Formatted: \" + $f)}' ;; *) jq -n '{}' ;; esac"
+          }
+        ]
+      }
     ]
   }
 }
