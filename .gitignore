@@ -38,4 +38,5 @@ go.work.sum
 /my-issue2md
 
 # Claude Code local settings
+# claude
 .claude/settings.local.json
