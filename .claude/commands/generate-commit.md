@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git add:_), Bash(git status:_), Bash(git commit:\*)
+allowed-tools: Bash(git add:_), Bash(git status:_), Bash(git commit:\*), Bash(git push)
 description: Create a git commit (use 中文)
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: generate-commit-message
 description: creates conventional commit messages based on staged changes. Use this skill whenever a user asks to generate git commit message.
-allowed-tools: Bash(git add:_), Bash(git status:_), Bash(git commit:\*)
+allowed-tools: Bash(git add:_), Bash(git status:_), Bash(git commit:\*), Bash(git push)
 ---
 
 # Generate Commit Message Skill.
