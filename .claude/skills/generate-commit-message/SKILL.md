@@ -20,6 +20,14 @@ Use 中文 generate commit messages
 4. Determine if there are Breaking Changes
 5. For complex changes, include a detailed body explaining what and why
 6. Add appropriate footers for issue references or breaking changes
+7. 明确询问:"是否要执行 git push? (回复 '1' 或 'ok' 确认)"
+8. **等待用户回复**
+9. 如果用户回复 "1" 或 "ok" (不区分大小写):
+
+- 执行 `git push`
+- 显示生成的 git commit message 和推送结果
+
+10. 如果用户回复其他内容或拒绝时，则结束流程
 
 For significant changes, include a detailed body explaining the changes.
 
