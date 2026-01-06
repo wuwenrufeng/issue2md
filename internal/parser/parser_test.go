@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -254,11 +255,11 @@ func TestParseURL(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(ParseURLt *testing.T) {
 			got, err := ParseURL(tt.url)
 
-			// 验证错误
-			if err != tt.wantErr {
+			// 验证错误（使用 errors.Is 以支持错误包装）
+			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("ParseURL() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
