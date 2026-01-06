@@ -105,3 +105,7 @@ feat: 初始化项目核心模块结构
 - 定义 GitHub API 数据结构 (internal/github/types.go)
 - 创建 URL 解析器类型定义 (internal/parser/types.go)
 - 降级 Go 版本至 1.24.9 以提升兼容性
+
+## Version History
+
+- v1.0 (2026-01-06) Initial release.
