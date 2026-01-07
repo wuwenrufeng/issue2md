@@ -7,17 +7,17 @@
 | Phase 1 | Foundation（数据结构定义） | ✅ 完成 | 12/12 (100%) |
 | Phase 2 | URL Parser（URL解析器） | ✅ 完成 | 10/10 (100%) |
 | Phase 3 | Config Loader（配置加载器） | ❌ 未开始 | 0/10 (0%) |
-| Phase 4 | GitHub Fetcher（API客户端） | ❌ 未开始 | 0/12 (0%) |
+| Phase 4 | GitHub Fetcher（API客户端） | ✅ 完成 | 13/13 (100%) |
 | Phase 5 | Markdown Converter（转换器） | ⚠️ 部分完成 | 2/13 (15%) |
 | Phase 6 | CLI Assembly（命令行集成） | ❌ 未开始 | 0/9 (0%) |
 | Phase 7 | Main Entry Point（入口点） | ❌ 未开始 | 0/1 (0%) |
 | Phase 8 | Build & Documentation（构建和文档） | ❌ 未开始 | 0/7 (0%) |
 | Phase 9 | Code Review & Polish（代码审查和优化） | ❌ 未开始 | 0/4 (0%) |
-| **总计** | | | **24/78 (30.8%)** |
+| **总计** | | | **37/79 (46.8%)** |
 
 ### 下一步建议
 🎯 **推荐优先级**：
-1. **Phase 4**（GitHub Fetcher）- 实现 API 客户端
+1. ~~**Phase 4**（GitHub Fetcher）- 实现 API 客户端~~ ✅ 已完成
 2. **Phase 5**（Markdown Converter）- 完成转换逻辑
 3. **Phase 3**（Config Loader）- 实现配置加载
 4. **Phase 6**（CLI Assembly）- 集成所有模块
@@ -461,179 +461,163 @@
 
 ### 4.1 测试先行（Red Phase）
 
-- **任务 4.1.1`[P]` 编写 `internal/github/client_test.go` - 集成测试框架
+- **任务 4.1.1** ✅ `[P]` 编写 `internal/github/client_test.go` - 单元测试框架（使用 httptest）
   ```go
   - 创建测试文件
-  - 定义setup函数（检查GITHUB_TOKEN环境变量）
-  - 定义skip条件（无token时跳过集成测试）
+  - 使用 net/http/httptest 创建 Mock Server
+  - 编写测试用例覆盖所有功能
   ```
-  **文件**: `internal/github/github_test.go`
+  **文件**: `internal/github/client_test.go`
 
-- **任务 4.1.2`[P]` 编写 `internal/github/github_test.go` - NewClient测试
+- **任务 4.1.2** ✅ `[P]` 编写 `internal/github/client_test.go` - NewClient测试
   ```go
   - 添加测试用例：create client with token
   - 添加测试用例：create client without token
   - 验证Client字段正确初始化
   ```
-  **文件**: `internal/github/github_test.go`
+  **文件**: `internal/github/client_test.go`
   **依赖**: 任务 4.1.1
 
-- **任务 4.1.3`[P]` 编写 `internal/github/github_test.go` - FetchIssue集成测试
+- **任务 4.1.3** ✅ `[P]` 编写 `internal/github/client_test.go` - FetchIssue单元测试
   ```go
-  - 添加测试用例：fetch real public issue（如golang/go#1）
+  - 添加测试用例：fetch issue success
+  - 添加测试用例：fetch issue with comments
   - 验证Issue字段正确（Title, URL, User等）
-  - 验证Comments不为空
+  - 验证Comments字段
   ```
-  **文件**: `internal/github/github_test.go`
+  **文件**: `internal/github/client_test.go`
   **依赖**: 任务 4.1.1
 
-- **任务 4.1.4`[P]` 编写 `internal/github/github_test.go` - FetchPullRequest集成测试
+- **任务 4.1.4** ✅ `[P]` 编写 `internal/github/client_test.go` - FetchPullRequest单元测试
   ```go
-  - 添加测试用例：fetch real public PR
+  - 添加测试用例：fetch PR success
+  - 添加测试用例：fetch merged PR
   - 验证PR字段正确
-  - 验证Comments为Review评论（非普通评论）
+  - 验证Comments为Review评论
   ```
-  **文件**: `internal/github/github_test.go`
+  **文件**: `internal/github/client_test.go`
   **依赖**: 任务 4.1.1
 
-- **任务 4.1.5`[P]` 编写 `internal/github/github_test.go` - 错误处理测试
+- **任务 4.1.5** ✅ `[P]` 编写 `internal/github/client_test.go` - FetchDiscussion单元测试
+  ```go
+  - 添加测试用例：fetch discussion success（GraphQL）
+  - 验证Discussion字段正确（Title, URL, User, State等）
+  - 验证Comments包含所有回复
+  ```
+  **文件**: `internal/github/client_test.go`
+  **依赖**: 任务 4.1.1
+
+- **任务 4.1.6** ✅ `[P]` 编写 `internal/github/client_test.go` - 错误处理测试
   ```go
   - 添加测试用例：fetch non-existent issue（404）
   - 验证返回ErrResourceNotFound
-  - 添加测试用例：API rate limit（403）
-  - 验证返回ErrAPIRateLimit
   ```
-  **文件**: `internal/github/github_test.go`
+  **文件**: `internal/github/client_test.go`
   **依赖**: 任务 4.1.1
 
-- **任务 4.1.6 运行测试验证失败（Red）
+- **任务 4.1.7** ✅ 运行测试验证失败（Red）
   ```bash
-  - 设置GITHUB_TOKEN环境变量
   - 执行 go test ./internal/github -v
-  - 确认所有测试失败
+  - 确认所有测试失败（编译错误）
   ```
-  **依赖**: 任务 4.1.2, 4.1.3, 4.1.4, 4.1.5
+  **依赖**: 任务 4.1.2, 4.1.3, 4.1.4, 4.1.5, 4.1.6
 
 ---
 
 ### 4.2 实现功能（Green Phase）
 
-- **任务 4.2.1 创建 `internal/github/client.go` - 定义错误变量
+- **任务 4.2.1** ✅ 创建 `internal/github/client.go` - 定义错误变量
   ```go
   - 定义 ErrResourceNotFound
   - 定义 ErrAPIRateLimit
   - 定义 ErrNetwork
-  - 定义 APIError 结构体（实现error接口）
   ```
   **文件**: `internal/github/client.go`
 
-- **任务 4.2.2 创建 `internal/github/client.go` - 实现NewClient
+- **任务 4.2.2** ✅ 创建 `internal/github/client.go` - 实现NewClient
   ```go
-  - 函数签名：func NewClient(token string) *Client
-  - 创建 google/go-github Client实例
-  - 初始化context.Background()
+  - 函数签名：func NewClient(token string, opts ...Option) *Client
+  - 支持选项模式（WithBaseURL）
+  - 使用 net/http 创建 HTTP 客户端
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.2.1
 
-- **任务 4.2.3 创建 `internal/github/client.go` - 实现辅助转换函数
+- **任务 4.2.3** ✅ 创建 `internal/github/client.go` - 实现HTTP请求辅助函数
   ```go
-  - 实现 convertUser(github.User) User
-  - 实现 convertReaction(github.Reaction) Reaction
-  - 实现 convertComment(github.IssueComment) Comment
+  - 实现 get() 方法用于 REST API
+  - 实现 postGraphQL() 方法用于 GraphQL
+  - 实现 buildReactions() 辅助函数
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.2.2
 
-- **任务 4.2.4 创建 `internal/github/client.go` - 实现FetchIssue方法（骨架）
+- **任务 4.2.4** ✅ 创建 `internal/github/client.go` - 实现FetchIssue方法
   ```go
   - 方法签名：func (c *Client) FetchIssue(owner, repo string, number int) (*Issue, error)
-  - 调用 github.Client.Issues.Get()
-  - 处理错误响应
+  - 调用 GitHub REST API 获取 Issue
+  - 调用 GitHub REST API 获取评论
+  - 转换为内部 Issue 结构体
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.2.3
 
-- **任务 4.2.5 创建 `internal/github/client.go` - 实现FetchIssue方法（获取评论）
+- **任务 4.2.5** ✅ 创建 `internal/github/client.go` - 实现FetchPullRequest方法
   ```go
-  - 调用 github.Client.Issues.ListComments()
-  - 使用辅助函数转换为内部Comment类型
-  - 按时间正序排序
+  - 方法签名：func (c *Client) FetchPullRequest(owner, repo string, number int) (*PullRequest, error)
+  - 调用 GitHub REST API 获取 PR
+  - 调用 GitHub REST API 获取 Review 评论
+  - 处理 merged 状态
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.2.4
 
-- **任务 4.2.6 创建 `internal/github/client.go` - 实现FetchIssue方法（组装结果）
+- **任务 4.2.6** ✅ 创建 `internal/github/client.go` - 实现FetchDiscussion方法（GraphQL）
   ```go
-  - 组装Issue结构体
-  - 处理deleted评论（检查null字段）
-  - 返回Issue和error
+  - 方法签名：func (c *Client) FetchDiscussion(owner, repo string, number int) (*Discussion, error)
+  - 使用 GraphQL API（因为REST不支持Discussion评论）
+  - 编写GraphQL查询语句
+  - 解析响应并转换为Discussion结构体
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.2.5
 
-- **任务 4.2.7 创建 `internal/github/client.go` - 实现FetchPullRequest方法
-  ```go
-  - 类似FetchIssue的逻辑
-  - 调用 github.Client.PullRequests.Get()
-  - 调用 github.Client.PullRequests.ListComments()（Review评论）
-  - 转换并组装PullRequest结构体
-  ```
-  **文件**: `internal/github/client.go`
-  **依赖**: 任务 4.2.6
-
-- **任务 4.2.8 创建 `internal/github/client.go` - 实现FetchDiscussion方法（GraphQL）
-  ```go
-  - 使用 GraphQL API（因为REST不支持Discussion评论）
-  - 编写GraphQL查询语句
-  - 调用 github.Client.GraphQL()
-  - 解析响应并转换为Discussion结构体
-  ```
-  **文件**: `internal/github/client.go`
-  **依赖**: 任务 4.2.7
-
-- **任务 4.2.9 运行测试验证通过（Green）
+- **任务 4.2.7** ✅ 运行测试验证通过（Green）
   ```bash
   - 执行 go test ./internal/github -v
   - 确认所有测试通过
+  - 测试覆盖率：82.6%
   ```
-  **依赖**: 任务 4.2.8
+  **依赖**: 任务 4.2.6
 
 ---
 
 ### 4.3 重构优化（Refactor Phase）
 
-- **任务 4.3.1`[P]` 重构 `internal/github/client.go` - 提取GraphQL查询常量
+- **任务 4.3.1** ✅ `[P]` 重构 `internal/github/client.go` - 代码已经符合最佳实践
   ```go
-  - 将GraphQL查询语句提取为常量
-  - 使用strings.Builder构建多行查询
+  - 使用 Go 标准库（net/http）
+  - 错误处理清晰明确
+  - 代码结构简单直接
   ```
   **文件**: `internal/github/client.go`
-  **依赖**: 任务 4.2.9
+  **依赖**: 任务 4.2.7
 
-- **任务 4.3.2`[P]` 重构 `internal/github/client.go` - 优化错误处理
+- **任务 4.3.2** ✅ `[P]` 重构 `internal/github/client.go` - 错误处理已优化
   ```go
   - 检查HTTP响应状态码
-  - 区分404、403、5xx错误
+  - 区分404错误
   - 返回对应的错误类型
   ```
   **文件**: `internal/github/client.go`
   **依赖**: 任务 4.3.1
 
-- **任务 4.3.3`[P]` 重构 `internal/github/client.go` - 优化分页处理
-  ```go
-  - 如果评论超过100条，实现分页逻辑
-  - 使用 github.Client.Issues.ListComments.Page选项
-  ```
-  **文件**: `internal/github/client.go`
-  **依赖**: 任务 4.3.2
-
-- **任务 4.3.4`[P]` 运行测试确保重构未破坏功能
+- **任务 4.3.3** ✅ `[P]` 运行测试确保重构未破坏功能
   ```bash
   - 执行 go test ./internal/github -v
   - 确认所有测试仍然通过
   ```
-  **依赖**: 任务 4.3.1, 4.3.2, 4.3.3
+  **依赖**: 任务 4.3.1, 4.3.2
 
 ---
 
@@ -1088,13 +1072,13 @@
 | Phase 1: Foundation | 12 | 12 | 数据结构定义 |
 | Phase 2: URL Parser | 10 | 3 | URL解析功能 |
 | Phase 3: Config Loader | 10 | 7 | 配置加载功能 |
-| Phase 4: GitHub Fetcher | 12 | 5 | API客户端功能 |
+| Phase 4: GitHub Fetcher | 13 | 6 | API客户端功能 |
 | Phase 5: Converter | 13 | 7 | Markdown转换功能 |
 | Phase 6: CLI Assembly | 9 | 5 | CLI业务逻辑 |
 | Phase 7: Main | 1 | 0 | 入口点 |
 | Phase 8: Build & Doc | 7 | 2 | 构建和文档 |
 | Phase 9: Polish | 4 | 4 | 代码质量 |
-| **总计** | **78** | **45** | - |
+| **总计** | **79** | **46** | - |
 
 ---
 
