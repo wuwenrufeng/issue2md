@@ -1,8 +1,33 @@
 # issue2md 开发任务列表
 
+## 📊 当前进度概览
+
+| Phase | 名称 | 状态 | 完成度 |
+|-------|------|------|--------|
+| Phase 1 | Foundation（数据结构定义） | ✅ 完成 | 12/12 (100%) |
+| Phase 2 | URL Parser（URL解析器） | ✅ 完成 | 10/10 (100%) |
+| Phase 3 | Config Loader（配置加载器） | ❌ 未开始 | 0/10 (0%) |
+| Phase 4 | GitHub Fetcher（API客户端） | ❌ 未开始 | 0/12 (0%) |
+| Phase 5 | Markdown Converter（转换器） | ⚠️ 部分完成 | 2/13 (15%) |
+| Phase 6 | CLI Assembly（命令行集成） | ❌ 未开始 | 0/9 (0%) |
+| Phase 7 | Main Entry Point（入口点） | ❌ 未开始 | 0/1 (0%) |
+| Phase 8 | Build & Documentation（构建和文档） | ❌ 未开始 | 0/7 (0%) |
+| Phase 9 | Code Review & Polish（代码审查和优化） | ❌ 未开始 | 0/4 (0%) |
+| **总计** | | | **24/78 (30.8%)** |
+
+### 下一步建议
+🎯 **推荐优先级**：
+1. **Phase 4**（GitHub Fetcher）- 实现 API 客户端
+2. **Phase 5**（Markdown Converter）- 完成转换逻辑
+3. **Phase 3**（Config Loader）- 实现配置加载
+4. **Phase 6**（CLI Assembly）- 集成所有模块
+
+---
+
 ## 📋 文档信息
 - **版本**: 1.0
 - **创建日期**: 2025-01-04
+- **最后更新**: 2025-01-07
 - **状态**: Active
 - **基于文档**: spec.md, plan.md, constitution.md
 
@@ -11,6 +36,7 @@
 ## 📌 任务说明
 
 ### 符号标记
+- `✅` : **已完成**
 - `[P]` : **可并行**执行的任务（无依赖关系）
 - **TDD强制**：测试任务必须在实现任务之前完成
 - **依赖关系**：任务后面的括号表示依赖的前置任务
@@ -29,17 +55,17 @@
 
 ### 1.1 项目初始化
 
-- **任务 1.1.1** `[P]` 初始化Go模块
+- **任务 1.1.1** ✅ `[P]` 初始化Go模块
   - 创建 `go.mod` 文件
   - 设置Go版本要求 `go 1.24.9`
   - 添加模块路径 `module github.com/issue2md`
 
-- **任务 1.1.2** `[P]` 创建基础目录结构
+- **任务 1.1.2** ✅ `[P]` 创建基础目录结构
   - 创建 `cmd/issue2md/` 目录
   - 创建 `internal/{parser,github,converter,config,cli}/` 目录
   - 验证目录结构符合plan.md定义
 
-- **任务 1.1.3** `[P]` 添加外部依赖
+- **任务 1.1.3** ✅ `[P]` 添加外部依赖
   - 执行 `go get github.com/google/go-github/v68`
   - 执行 `go mod tidy`
   - 验证 `go.sum` 文件生成
@@ -48,7 +74,7 @@
 
 ### 1.2 internal/parser - 数据结构定义
 
-- **任务 1.2.1** `[P]` 创建 `internal/parser/types.go` - 定义ResourceType
+- **任务 1.2.1** ✅ `[P]` 创建 `internal/parser/types.go` - 定义ResourceType
   ```go
   - 定义 ResourceType 类型（int）
   - 定义4个常量：Unknown, Issue, PullRequest, Discussion
@@ -56,7 +82,7 @@
   ```
   **文件**: `internal/parser/types.go`
 
-- **任务 1.2.2** `[P]` 创建 `internal/parser/types.go` - 定义Resource结构体
+- **任务 1.2.2** ✅ `[P]` 创建 `internal/parser/types.go` - 定义Resource结构体
   ```go
   - 定义 Resource 结构体
   - 字段：Type (ResourceType), Owner, Repo, Number (int), OriginalURL
@@ -68,14 +94,14 @@
 
 ### 1.3 internal/github - 数据结构定义
 
-- **任务 1.3.1** `[P]` 创建 `internal/github/types.go` - 定义基础类型
+- **任务 1.3.1** ✅ `[P]` 创建 `internal/github/types.go` - 定义基础类型
   ```go
   - 定义 User 结构体：Login, HTMLURL
   - 定义 Reaction 结构体：Content, Count
   ```
   **文件**: `internal/github/types.go`
 
-- **任务 1.3.2** `[P]` 创建 `internal/github/types.go` - 定义Comment结构体
+- **任务 1.3.2** ✅ `[P]` 创建 `internal/github/types.go` - 定义Comment结构体
   ```go
   - 定义 Comment 结构体
   - 字段：ID (int64), User (User), CreatedAt (time.Time), Body, Reactions ([]Reaction), Deleted (bool)
@@ -83,7 +109,7 @@
   **文件**: `internal/github/types.go`
   **依赖**: 任务 1.3.1
 
-- **任务 1.3.3** `[P]` 创建 `internal/github/types.go` - 定义Issue结构体
+- **任务 1.3.3** ✅ `[P]` 创建 `internal/github/types.go` - 定义Issue结构体
   ```go
   - 定义 Issue 结构体
   - 字段：Title, URL, User, CreatedAt, State, Body, Comments ([]Comment)
@@ -91,7 +117,7 @@
   **文件**: `internal/github/types.go`
   **依赖**: 任务 1.3.2
 
-- **任务 1.3.4** `[P]` 创建 `internal/github/types.go` - 定义PullRequest结构体
+- **任务 1.3.4** ✅ `[P]` 创建 `internal/github/types.go` - 定义PullRequest结构体
   ```go
   - 定义 PullRequest 结构体
   - 字段：Title, URL, User, CreatedAt, State, Body, Comments ([]Comment)
@@ -99,7 +125,7 @@
   **文件**: `internal/github/types.go`
   **依赖**: 任务 1.3.2
 
-- **任务 1.3.5** `[P]` 创建 `internal/github/types.go` - 定义Discussion结构体
+- **任务 1.3.5** ✅ `[P]` 创建 `internal/github/types.go` - 定义Discussion结构体
   ```go
   - 定义 Discussion 结构体
   - 字段：Title, URL, User, CreatedAt, State, Body, Comments ([]Comment)
@@ -111,7 +137,7 @@
 
 ### 1.4 internal/config - 数据结构定义
 
-- **任务 1.4.1** `[P]` 创建 `internal/config/config.go` - 定义Config结构体
+- **任务 1.4.1** ✅ `[P]` 创建 `internal/config/config.go` - 定义Config结构体
   ```go
   - 定义 Config 结构体
   - 字段：URL, OutputFile, EnableReactions, EnableUserLinks, Token
@@ -122,7 +148,7 @@
 
 ### 1.5 internal/converter - 数据结构定义
 
-- **任务 1.5.1** `[P]` 创建 `internal/converter/converter.go` - 定义Converter结构体
+- **任务 1.5.1** ✅ `[P]` 创建 `internal/converter/converter.go` - 定义Converter结构体
   ```go
   - 定义 Converter 结构体
   - 字段：enableReactions, enableUserLinks (bool)
@@ -130,7 +156,7 @@
   ```
   **文件**: `internal/converter/converter.go`
 
-- **任务 1.5.2** `[P]` 创建 `internal/converter/converter.go` - 定义选项函数
+- **任务 1.5.2** ✅ `[P]` 创建 `internal/converter/converter.go` - 定义选项函数
   ```go
   - 实现 NewConverter(options ...Option) *Converter
   - 实现 WithReactions(enable bool) Option
@@ -143,7 +169,7 @@
 
 ### 1.6 internal/cli - 数据结构定义
 
-- **任务 1.6.1** `[P]` 创建 `internal/cli/version.go`
+- **任务 1.6.1** ✅ `[P]` 创建 `internal/cli/version.go`
   ```go
   - 定义 Version 变量 = "dev"
   - 定义 BuildDate 变量 = "unknown"
@@ -158,7 +184,7 @@
 
 ### 2.1 测试先行（Red Phase）
 
-- **任务 2.1.1** 编写 `internal/parser/parser_test.go` - 表格驱动测试框架
+- **任务 2.1.1** ✅ 编写 `internal/parser/parser_test.go` - 表格驱动测试框架
   ```go
   - 创建测试文件
   - 定义测试用例结构（包含name, url, want, wantErr字段）
@@ -166,7 +192,7 @@
   ```
   **文件**: `internal/parser/parser_test.go`
 
-- **任务 2.1.2** 编写 `internal/parser/parser_test.go` - 有效URL测试用例
+- **任务 2.1.2** ✅ 编写 `internal/parser/parser_test.go` - 有效URL测试用例
   ```go
   - 添加测试用例：valid issue URL
   - 添加测试用例：valid PR URL
@@ -176,7 +202,7 @@
   **文件**: `internal/parser/parser_test.go`
   **依赖**: 任务 2.1.1
 
-- **任务 2.1.3** 编写 `internal/parser/parser_test.go` - 无效URL测试用例
+- **任务 2.1.3** ✅ 编写 `internal/parser/parser_test.go` - 无效URL测试用例
   ```go
   - 添加测试用例：invalid URL format
   - 添加测试用例：unsupported resource type
@@ -186,7 +212,7 @@
   **文件**: `internal/parser/parser_test.go`
   **依赖**: 任务 2.1.1
 
-- **任务 2.1.4** 编写 `internal/parser/parser_test.go` - 边界条件测试
+- **任务 2.1.4** ✅ 编写 `internal/parser/parser_test.go` - 边界条件测试
   ```go
   - 添加测试用例：URL with query parameters（应忽略）
   - 添加测试用例：URL with fragment（应忽略）
@@ -195,7 +221,7 @@
   **文件**: `internal/parser/parser_test.go`
   **依赖**: 任务 2.1.1
 
-- **任务 2.1.5** 运行测试验证失败（Red）
+- **任务 2.1.5** ✅ 运行测试验证失败（Red）
   ```bash
   - 执行 go test ./internal/parser -v
   - 确认所有测试失败（因为功能未实现）
@@ -206,14 +232,14 @@
 
 ### 2.2 实现功能（Green Phase）
 
-- **任务 2.2.1** 创建 `internal/parser/parser.go` - 定义错误变量
+- **任务 2.2.1** ✅ 创建 `internal/parser/parser.go` - 定义错误变量
   ```go
   - 定义 ErrInvalidURLFormat
   - 定义 ErrUnsupportedResourceType
   ```
   **文件**: `internal/parser/parser.go`
 
-- **任务 2.2.2** 创建 `internal/parser/parser.go` - 实现ParseURL函数骨架
+- **任务 2.2.2** ✅ 创建 `internal/parser/parser.go` - 实现ParseURL函数骨架
   ```go
   - 函数签名：func ParseURL(url string) (*Resource, error)
   - 实现基本的URL解析逻辑
@@ -222,7 +248,7 @@
   **文件**: `internal/parser/parser.go`
   **依赖**: 任务 2.2.1
 
-- **任务 2.2.3** 创建 `internal/parser/parser.go` - 实现URL路径匹配逻辑
+- **任务 2.2.3** ✅ 创建 `internal/parser/parser.go` - 实现URL路径匹配逻辑
   ```go
   - 使用正则表达式匹配URL路径
   - 支持三种模式：/issues/{num}, /pull/{num}, /discussions/{num}
@@ -231,7 +257,7 @@
   **文件**: `internal/parser/parser.go`
   **依赖**: 任务 2.2.2
 
-- **任务 2.2.4** 创建 `internal/parser/parser.go` - 实现资源类型识别
+- **任务 2.2.4** ✅ 创建 `internal/parser/parser.go` - 实现资源类型识别
   ```go
   - 根据URL路径识别 ResourceType
   - 返回对应的 Resource 结构体
@@ -239,7 +265,7 @@
   **文件**: `internal/parser/parser.go`
   **依赖**: 任务 2.2.3
 
-- **任务 2.2.5** 运行测试验证通过（Green）
+- **任务 2.2.5** ✅ 运行测试验证通过（Green）
   ```bash
   - 执行 go test ./internal/parser -v
   - 确认所有测试通过
@@ -250,7 +276,7 @@
 
 ### 2.3 重构优化（Refactor Phase）
 
-- **任务 2.3.1`[P]` 重构 `internal/parser/parser.go` - 提取正则表达式常量
+- **任务 2.3.1** ✅ `[P]` 重构 `internal/parser/parser.go` - 提取辅助函数优化代码结构
   ```go
   - 将正则表达式提取为包级常量
   - 使用 regexp.MustCompile 在 init 中编译
@@ -258,7 +284,7 @@
   **文件**: `internal/parser/parser.go`
   **依赖**: 任务 2.2.5
 
-- **任务 2.3.2`[P]` 重构 `internal/parser/parser.go` - 优化错误信息
+- **任务 2.3.2** ✅ `[P]` 重构 `internal/parser/parser.go` - 优化错误信息
   ```go
   - 使用 fmt.Errorf 包装错误
   - 提供更详细的错误上下文
@@ -266,7 +292,7 @@
   **文件**: `internal/parser/parser.go`
   **依赖**: 任务 2.3.1
 
-- **任务 2.3.3`[P]` 运行测试确保重构未破坏功能
+- **任务 2.3.3** ✅ `[P]` 运行测试确保重构未破坏功能
   ```bash
   - 执行 go test ./internal/parser -v
   - 确认所有测试仍然通过
