@@ -1,27 +1,5 @@
 # issue2md 开发任务列表
 
-## 📊 当前进度概览
-
-| Phase | 名称 | 状态 | 完成度 |
-|-------|------|------|--------|
-| Phase 1 | Foundation（数据结构定义） | ✅ 完成 | 12/12 (100%) |
-| Phase 2 | URL Parser（URL解析器） | ✅ 完成 | 10/10 (100%) |
-| Phase 3 | Config Loader（配置加载器） | ✅ 完成 | 10/10 (100%) |
-| Phase 4 | GitHub Fetcher（API客户端） | ✅ 完成 | 13/13 (100%) |
-| Phase 5 | Markdown Converter（转换器） | ⚠️ 部分完成 | 2/13 (15%) |
-| Phase 6 | CLI Assembly（命令行集成） | ❌ 未开始 | 0/9 (0%) |
-| Phase 7 | Main Entry Point（入口点） | ❌ 未开始 | 0/1 (0%) |
-| Phase 8 | Build & Documentation（构建和文档） | ❌ 未开始 | 0/7 (0%) |
-| Phase 9 | Code Review & Polish（代码审查和优化） | ❌ 未开始 | 0/4 (0%) |
-| **总计** | | | **47/79 (59.5%)** |
-
-### 下一步建议
-🎯 **推荐优先级**：
-1. ~~**Phase 4**（GitHub Fetcher）- 实现 API 客户端~~ ✅ 已完成
-2. **Phase 5**（Markdown Converter）- 完成转换逻辑
-3. **Phase 3**（Config Loader）- 实现配置加载
-4. **Phase 6**（CLI Assembly）- 集成所有模块
-
 ---
 
 ## 📋 文档信息
@@ -32,6 +10,30 @@
 - **基于文档**: spec.md, plan.md, constitution.md
 
 ---
+
+## 📊 当前进度概览
+
+| Phase | 名称 | 状态 | 完成度 |
+|-------|------|------|--------|
+| Phase 1 | Foundation（数据结构定义） | ✅ 完成 | 12/12 (100%) |
+| Phase 2 | URL Parser（URL解析器） | ✅ 完成 | 10/10 (100%) |
+| Phase 3 | Config Loader（配置加载器） | ✅ 完成 | 10/10 (100%) |
+| Phase 4 | GitHub Fetcher（API客户端） | ✅ 完成 | 13/13 (100%) |
+| Phase 5 | Markdown Converter（转换器） | ✅ 完成 | 15/15 (100%) |
+| Phase 6 | CLI Assembly（命令行集成） | ❌ 未开始 | 0/9 (0%) |
+| Phase 7 | Main Entry Point（入口点） | ❌ 未开始 | 0/1 (0%) |
+| Phase 8 | Build & Documentation（构建和文档） | ❌ 未开始 | 0/7 (0%) |
+| Phase 9 | Code Review & Polish（代码审查和优化） | ❌ 未开始 | 0/4 (0%) |
+| **总计** | | | **60/79 (75.9%)** |
+
+### 下一步建议
+🎯 **推荐优先级**：
+1. ~~**Phase 4**（GitHub Fetcher）- 实现 API 客户端~~ ✅ 已完成
+2. ~~**Phase 5**（Markdown Converter）- 完成转换逻辑~~ ✅ 已完成
+3. ~~**Phase 3**（Config Loader）- 实现配置加载~~ ✅ 已完成
+4. **Phase 6**（CLI Assembly）- 集成所有模块
+5. **Phase 7**（Main Entry Point）- 创建入口点
+
 
 ## 📌 任务说明
 
@@ -631,7 +633,7 @@
 
 ### 5.1 测试先行（Red Phase）
 
-- **任务 5.1.1`[P]` 编写 `internal/converter/converter_test.go` - 测试框架
+- **任务 5.1.1** ✅ `[P]` 编写 `internal/converter/converter_test.go` - 测试框架
   ```go
   - 创建测试文件
   - 定义测试辅助函数（创建mock github.Issue）
@@ -639,7 +641,7 @@
   ```
   **文件**: `internal/converter/converter_test.go`
 
-- **任务 5.1.2`[P]` 编写 `internal/converter/converter_test.go` - ConvertIssue基础测试
+- **任务 5.1.2** ✅ `[P]` 编写 `internal/converter/converter_test.go` - ConvertIssue基础测试
   ```go
   - 添加测试用例：basic issue conversion
   - 验证输出包含YAML Frontmatter
@@ -649,7 +651,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.3`[P]` 编写 `internal/converter/converter_test.go` - ConvertIssue评论测试
+- **任务 5.1.3** ✅ `[P]` 编写 `internal/converter/converter_test.go` - ConvertIssue评论测试
   ```go
   - 添加测试用例：issue with comments
   - 验证输出包含所有评论
@@ -658,7 +660,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.4`[P]` 编写 `internal/converter/converter_test.go` - Reactions和UserLinks测试
+- **任务 5.1.4** ✅ `[P]` 编写 `internal/converter/converter_test.go` - Reactions和UserLinks测试
   ```go
   - 添加测试用例：with reactions enabled
   - 验证输出包含reactions统计
@@ -668,7 +670,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.5`[P]` 编写 `internal/converter/converter_test.go` - Emoji转换测试
+- **任务 5.1.5** ✅ `[P]` 编写 `internal/converter/converter_test.go` - Emoji转换测试
   ```go
   - 添加测试用例：emoji shortcode conversion
   - 验证:thumbsup: → 👍
@@ -677,7 +679,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.6`[P]` 编写 `internal/converter/converter_test.go` - ConvertPullRequest测试
+- **任务 5.1.6** ✅ `[P]` 编写 `internal/converter/converter_test.go` - ConvertPullRequest测试
   ```go
   - 添加测试用例：basic PR conversion
   - 验证输出包含PR标题、状态
@@ -686,7 +688,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.7`[P]` 编写 `internal/converter/converter_test.go` - ConvertDiscussion测试
+- **任务 5.1.7** ✅ `[P]` 编写 `internal/converter/converter_test.go` - ConvertDiscussion测试
   ```go
   - 添加测试用例：basic discussion conversion
   - 验证输出包含所有评论（含回复）
@@ -694,7 +696,7 @@
   **文件**: `internal/converter/converter_test.go`
   **依赖**: 任务 5.1.1
 
-- **任务 5.1.8 运行测试验证失败（Red）
+- **任务 5.1.8** ✅ 运行测试验证失败（Red）
   ```bash
   - 执行 go test ./internal/converter -v
   - 确认所有测试失败
@@ -705,14 +707,14 @@
 
 ### 5.2 实现功能（Green Phase）
 
-- **任务 5.2.1 在 `internal/converter/converter.go` - 实现emoji映射表
+- **任务 5.2.1** ✅ 在 `internal/converter/converter.go` - 实现emoji映射表
   ```go
   - 定义 emojiMap 变量（map[string]string）
   - 包含所有GitHub shortcode到emoji的映射
   ```
   **文件**: `internal/converter/converter.go`
 
-- **任务 5.2.2 在 `internal/converter/converter.go` - 实现辅助函数
+- **任务 5.2.2** ✅ 在 `internal/converter/converter.go` - 实现辅助函数
   ```go
   - 实现 formatYAMLFrontmatter(...) string
   - 实现 formatUser(user github.User) string
@@ -723,7 +725,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.1
 
-- **任务 5.2.3 在 `internal/converter/converter.go` - 实现ConvertIssue方法（骨架）
+- **任务 5.2.3** ✅ 在 `internal/converter/converter.go` - 实现ConvertIssue方法（骨架）
   ```go
   - 方法签名：func (c *Converter) ConvertIssue(issue *github.Issue) (string, error)
   - 创建strings.Builder实例
@@ -732,7 +734,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.2
 
-- **任务 5.2.4 在 `internal/converter/converter.go` - 实现ConvertIssue方法（正文）
+- **任务 5.2.4** ✅ 在 `internal/converter/converter.go` - 实现ConvertIssue方法（正文）
   ```go
   - 生成标题行（# {Title}）
   - 生成元数据行（作者、时间、状态）
@@ -741,7 +743,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.3
 
-- **任务 5.2.5 在 `internal/converter/converter.go` - 实现ConvertIssue方法（评论）
+- **任务 5.2.5** ✅ 在 `internal/converter/converter.go` - 实现ConvertIssue方法（评论）
   ```go
   - 遍历issue.Comments
   - 为每个评论生成标题（### {user} - {time}）
@@ -751,7 +753,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.4
 
-- **任务 5.2.6 在 `internal/converter/converter.go` - 实现ConvertPullRequest方法
+- **任务 5.2.6** ✅ 在 `internal/converter/converter.go` - 实现ConvertPullRequest方法
   ```go
   - 类似ConvertIssue的逻辑
   - 处理merged状态
@@ -759,7 +761,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.5
 
-- **任务 5.2.7 在 `internal/converter/converter.go` - 实现ConvertDiscussion方法
+- **任务 5.2.7** ✅ 在 `internal/converter/converter.go` - 实现ConvertDiscussion方法
   ```go
   - 类似ConvertIssue的逻辑
   - 评论已按时间排序（github包保证）
@@ -767,7 +769,7 @@
   **文件**: `internal/converter/converter.go`
   **依赖**: 任务 5.2.6
 
-- **任务 5.2.8 运行测试验证通过（Green）
+- **任务 5.2.8** ✅ 运行测试验证通过（Green）
   ```bash
   - 执行 go test ./internal/converter -v
   - 确认所有测试通过
