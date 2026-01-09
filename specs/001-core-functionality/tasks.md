@@ -20,11 +20,11 @@
 | Phase 3 | Config Loader（配置加载器） | ✅ 完成 | 10/10 (100%) |
 | Phase 4 | GitHub Fetcher（API客户端） | ✅ 完成 | 13/13 (100%) |
 | Phase 5 | Markdown Converter（转换器） | ✅ 完成 | 15/15 (100%) |
-| Phase 6 | CLI Assembly（命令行集成） | ❌ 未开始 | 0/9 (0%) |
+| Phase 6 | CLI Assembly（命令行集成） | ✅ 完成 | 9/9 (100%) |
 | Phase 7 | Main Entry Point（入口点） | ❌ 未开始 | 0/1 (0%) |
 | Phase 8 | Build & Documentation（构建和文档） | ❌ 未开始 | 0/7 (0%) |
 | Phase 9 | Code Review & Polish（代码审查和优化） | ❌ 未开始 | 0/4 (0%) |
-| **总计** | | | **60/79 (75.9%)** |
+| **总计** | | | **69/79 (87.3%)** |
 
 ### 下一步建议
 🎯 **推荐优先级**：
@@ -811,7 +811,7 @@
 
 ### 6.1 测试先行（Red Phase）
 
-- **任务 6.1.1`[P]` 编写 `internal/cli/cli_test.go` - 端到端测试框架
+- **任务 6.1.1`[P]` ✅ 编写 `internal/cli/cli_test.go` - 端到端测试框架
   ```go
   - 创建测试文件
   - 定义测试辅助函数（创建fake stdout/stderr）
@@ -819,7 +819,7 @@
   ```
   **文件**: `internal/cli/cli_test.go`
 
-- **任务 6.1.2`[P]` 编写 `internal/cli/cli_test.go` - 帮助和版本测试
+- **任务 6.1.2`[P]` ✅ 编写 `internal/cli/cli_test.go` - 帮助和版本测试
   ```go
   - 添加测试用例：--help flag
   - 验证exitCode=0
@@ -830,7 +830,7 @@
   **文件**: `internal/cli/cli_test.go`
   **依赖**: 任务 6.1.1
 
-- **任务 6.1.3`[P]` 编写 `internal/cli/cli_test.go` - URL解析错误测试
+- **任务 6.1.3`[P]` ✅ 编写 `internal/cli/cli_test.go` - URL解析错误测试
   ```go
   - 添加测试用例：invalid URL
   - 验证exitCode=1
@@ -839,7 +839,7 @@
   **文件**: `internal/cli/cli_test.go`
   **依赖**: 任务 6.1.1
 
-- **任务 6.1.4`[P]` 编写 `internal/cli/cli_test.go` - GitHub API错误测试
+- **任务 6.1.4`[P]` ✅ 编写 `internal/cli/cli_test.go` - GitHub API错误测试
   ```go
   - 添加测试用例：issue not found（使用mock github client）
   - 验证exitCode=1
@@ -848,7 +848,7 @@
   **文件**: `internal/cli/cli_test.go`
   **依赖**: 任务 6.1.1
 
-- **任务 6.1.5`[P]` 编写 `internal/cli/cli_test.go` - 完整流程测试（跳过，需要真实token）
+- **任务 6.1.5`[P]` ✅ 编写 `internal/cli/cli_test.go` - 完整流程测试（跳过，需要真实token）
   ```go
   - 添加测试用例：end-to-end issue conversion
   - 使用真实的public issue
@@ -858,7 +858,7 @@
   **文件**: `internal/cli/cli_test.go`
   **依赖**: 任务 6.1.1
 
-- **任务 6.1.6 运行测试验证失败（Red）
+- **任务 6.1.6 ✅ 运行测试验证失败（Red）
   ```bash
   - 执行 go test ./internal/cli -v
   - 确认所有测试失败
@@ -869,7 +869,7 @@
 
 ### 6.2 实现功能（Green Phase）
 
-- **任务 6.2.1 创建 `internal/cli/cli.go` - 实现Run函数骨架
+- **任务 6.2.1 ✅ 创建 `internal/cli/cli.go` - 实现Run函数骨架
   ```go
   - 函数签名：func Run(argv []string, stdout, stderr io.Writer) int
   - 调用config.LoadFromFlags
@@ -877,7 +877,7 @@
   ```
   **文件**: `internal/cli/cli.go`
 
-- **任务 6.2.2 在 `internal/cli/cli.go` - 实现URL解析逻辑
+- **任务 6.2.2 ✅ 在 `internal/cli/cli.go` - 实现URL解析逻辑
   ```go
   - 调用parser.ParseURL
   - 捕获错误并输出到stderr
@@ -886,7 +886,7 @@
   **文件**: `internal/cli/cli.go`
   **依赖**: 任务 6.2.1
 
-- **任务 6.2.3 在 `internal/cli/cli.go` - 实现GitHub客户端创建
+- **任务 6.2.3 ✅ 在 `internal/cli/cli.go` - 实现GitHub客户端创建
   ```go
   - 调用github.NewClient(cfg.Token)
   - 根据resource.Type分发到不同的Fetch方法
@@ -894,7 +894,7 @@
   **文件**: `internal/cli/cli.go`
   **依赖**: 任务 6.2.2
 
-- **任务 6.2.4 在 `internal/cli/cli.go` - 实现数据获取和转换逻辑
+- **任务 6.2.4 ✅ 在 `internal/cli/cli.go` - 实现数据获取和转换逻辑
   ```go
   - 调用FetchIssue/FetchPullRequest/FetchDiscussion
   - 创建converter.Converter实例
@@ -904,7 +904,7 @@
   **文件**: `internal/cli/cli.go`
   **依赖**: 任务 6.2.3
 
-- **任务 6.2.5 在 `internal/cli/cli.go` - 实现输出逻辑
+- **任务 6.2.5 ✅ 在 `internal/cli/cli.go` - 实现输出逻辑
   ```go
   - 检查cfg.OutputFile
   - 如果为空，输出到stdout
@@ -914,7 +914,7 @@
   **文件**: `internal/cli/cli.go`
   **依赖**: 任务 6.2.4
 
-- **任务 6.2.6 运行测试验证通过（Green）
+- **任务 6.2.6 ✅ 运行测试验证通过（Green）
   ```bash
   - 执行 go test ./internal/cli -v
   - 确认所有测试通过
