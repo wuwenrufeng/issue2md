@@ -3,6 +3,7 @@ package github
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,9 +12,9 @@ import (
 
 // 错误定义
 var (
-	ErrResourceNotFound = fmt.Errorf("resource not found")
-	ErrAPIRateLimit     = fmt.Errorf("API rate limit exceeded")
-	ErrNetwork          = fmt.Errorf("network error")
+	ErrResourceNotFound = errors.New("resource not found")
+	ErrAPIRateLimit     = errors.New("API rate limit exceeded")
+	ErrNetwork          = errors.New("network error")
 )
 
 // Option 配置 Client 的选项

@@ -387,6 +387,9 @@ func TestNewClient(t *testing.T) {
 
 // 辅助函数：解析时间字符串
 func parseTime(timeStr string) time.Time {
-	t, _ := time.Parse(time.RFC3339, timeStr)
+	t, err := time.Parse(time.RFC3339, timeStr)
+	if err != nil {
+		panic(err)
+	}
 	return t
 }

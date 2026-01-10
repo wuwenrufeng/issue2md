@@ -2,7 +2,6 @@ package cli
 
 import (
 	"bytes"
-	"os"
 	"strings"
 	"testing"
 )
@@ -119,26 +118,3 @@ func TestRun(t *testing.T) {
 		})
 	}
 }
-
-// 辅助函数：创建临时环境变量
-func setEnv(key, value string) func() {
-	original := getEnvOrDefault(key, "")
-	osSetEnv(key, value)
-	return func() {
-		osSetEnv(key, original)
-	}
-}
-
-// 辅助函数：获取环境变量或默认值
-func getEnvOrDefault(key, defaultValue string) string {
-	if value := osGetEnv(key); value != "" {
-		return value
-	}
-	return defaultValue
-}
-
-// 包装os.Getenv和os.Setenv以便于测试
-var (
-	osGetEnv = os.Getenv
-	osSetEnv = os.Setenv
-)

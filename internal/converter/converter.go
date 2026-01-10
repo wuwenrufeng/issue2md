@@ -2,11 +2,20 @@ package converter
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
 	"github.com/wuwenrufeng/issue2md/internal/github"
 )
+
+// title 将字符串首字母大写（替代已弃用的 strings.Title）
+func title(s string) string {
+	if s == "" {
+		return ""
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
+}
 
 // emojiMap GitHub shortcode 到 Unicode emoji 的映射表
 var emojiMap = map[string]string{
@@ -69,7 +78,7 @@ func NewConverter(options ...Option) *Converter {
 }
 
 // formatYAMLFrontmatter 格式化 YAML Frontmatter
-func (c *Converter) formatYAMLFrontatter(title, url, author, createdAt, status string) string {
+func (c *Converter) formatYAMLFrontmatter(title, url, author, createdAt, status string) string {
 	return fmt.Sprintf("---\ntitle: %q\nurl: %q\nauthor: %q\ncreated_at: %q\nstatus: %q\n---\n\n",
 		title, url, author, createdAt, status)
 }
@@ -135,13 +144,9 @@ func (c *Converter) formatReactions(reactions []github.Reaction) string {
 	}
 
 	// 排序
-	for i := 0; i < len(items); i++ {
-		for j := i + 1; j < len(items); j++ {
-			if items[i].order > items[j].order {
-				items[i], items[j] = items[j], items[i]
-			}
-		}
-	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].order < items[j].order
+	})
 
 	// 构建输出
 	for i, item := range items {
@@ -170,7 +175,7 @@ func (c *Converter) ConvertIssue(issue *github.Issue) (string, error) {
 	// 1. YAML Frontmatter
 	author := fmt.Sprintf("@%s", issue.User.Login)
 	createdAt := c.formatTimestamp(issue.CreatedAt)
-	builder.WriteString(c.formatYAMLFrontatter(
+	builder.WriteString(c.formatYAMLFrontmatter(
 		issue.Title,
 		issue.URL,
 		author,
@@ -184,7 +189,7 @@ func (c *Converter) ConvertIssue(issue *github.Issue) (string, error) {
 	// 3. 元数据
 	builder.WriteString(fmt.Sprintf("**作者**: %s\n", c.formatUser(issue.User)))
 	builder.WriteString(fmt.Sprintf("**创建时间**: %s\n", createdAt))
-	statusDisplay := strings.Title(issue.State)
+	statusDisplay := title(issue.State)
 	builder.WriteString(fmt.Sprintf("**状态**: %s\n\n", statusDisplay))
 
 	// 4. 正文
@@ -230,7 +235,7 @@ func (c *Converter) ConvertPullRequest(pr *github.PullRequest) (string, error) {
 	// 1. YAML Frontmatter
 	author := fmt.Sprintf("@%s", pr.User.Login)
 	createdAt := c.formatTimestamp(pr.CreatedAt)
-	builder.WriteString(c.formatYAMLFrontatter(
+	builder.WriteString(c.formatYAMLFrontmatter(
 		pr.Title,
 		pr.URL,
 		author,
@@ -244,7 +249,7 @@ func (c *Converter) ConvertPullRequest(pr *github.PullRequest) (string, error) {
 	// 3. 元数据
 	builder.WriteString(fmt.Sprintf("**作者**: %s\n", c.formatUser(pr.User)))
 	builder.WriteString(fmt.Sprintf("**创建时间**: %s\n", createdAt))
-	statusDisplay := strings.Title(pr.State)
+	statusDisplay := title(pr.State)
 	builder.WriteString(fmt.Sprintf("**状态**: %s\n\n", statusDisplay))
 
 	// 4. 正文
@@ -290,7 +295,7 @@ func (c *Converter) ConvertDiscussion(discussion *github.Discussion) (string, er
 	// 1. YAML Frontmatter
 	author := fmt.Sprintf("@%s", discussion.User.Login)
 	createdAt := c.formatTimestamp(discussion.CreatedAt)
-	builder.WriteString(c.formatYAMLFrontatter(
+	builder.WriteString(c.formatYAMLFrontmatter(
 		discussion.Title,
 		discussion.URL,
 		author,
@@ -304,7 +309,7 @@ func (c *Converter) ConvertDiscussion(discussion *github.Discussion) (string, er
 	// 3. 元数据
 	builder.WriteString(fmt.Sprintf("**作者**: %s\n", c.formatUser(discussion.User)))
 	builder.WriteString(fmt.Sprintf("**创建时间**: %s\n", createdAt))
-	statusDisplay := strings.Title(discussion.State)
+	statusDisplay := title(discussion.State)
 	builder.WriteString(fmt.Sprintf("**状态**: %s\n\n", statusDisplay))
 
 	// 4. 正文
