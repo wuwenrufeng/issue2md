@@ -37,6 +37,63 @@ make install
 
 前往 [Releases](https://github.com/wuwenrufeng/issue2md/releases) 页面下载适合你操作系统的二进制文件。
 
+### 使用 Docker（推荐）
+
+#### 快速开始
+
+```bash
+# 构建镜像
+docker build -t issue2md:latest .
+
+# 转换 Issue 并输出到终端
+docker run --rm issue2md:latest https://github.com/golang/go/issues/1
+
+# 转换 Issue 并保存到文件（挂载卷）
+docker run --rm -v $(pwd)/output:/app/output \
+  issue2md:latest https://github.com/golang/go/issues/1 /app/output/golang-issue-1.md
+```
+
+#### 使用 Docker Compose
+
+```bash
+# 启动服务并执行转换
+docker-compose run issue2md https://github.com/golang/go/issues/1
+
+# 转换并保存到文件
+docker-compose run issue2md \
+  https://github.com/golang/go/issues/1 /app/output/golang-issue-1.md
+
+# 使用环境变量（私有仓库）
+GITHUB_TOKEN=ghp_xxx docker-compose run issue2md \
+  https://github.com/owner/private-repo/issues/1
+```
+
+#### 构建参数
+
+```bash
+# 自定义版本信息
+docker build \
+  --build-arg VERSION=v1.0.0 \
+  --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+  --build-arg GIT_COMMIT=$(git rev-parse --short HEAD) \
+  -t issue2md:v1.0.0 .
+```
+
+#### Docker 镜像特点
+
+- ✅ **多阶段构建** - 镜像体积 < 10MB
+- ✅ **依赖缓存** - 快速构建
+- ✅ **安全加固** - 非 root 用户运行
+- ✅ **静态二进制** - 无需额外依赖
+- ✅ **健康检查** - 自动监控服务状态
+
+#### 镜像信息
+
+- **基础镜像**: Alpine 3.19
+- **镜像大小**: ~8MB
+- **Go 版本**: 1.24.9
+- **用户**: appuser (UID 1000)
+
 ## 使用方法
 
 ### 基本用法

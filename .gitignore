@@ -37,9 +37,11 @@ go.work.sum
 # Project-specific
 /my-issue2md
 
+# Output directory for Docker and file outputs
+output/
+
 # Claude Code local settings
 # claude
 .claude/settings.local.json
 bin/issue2md
-.gitignore
 .vscode/*

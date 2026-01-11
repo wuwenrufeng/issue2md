@@ -1,0 +1,51 @@
+# ===========================================
+# issue2md Docker Compose 配置
+# ===========================================
+# 用于容器化运行 issue2md 工具
+
+version: "3.8"
+
+services:
+  # ===========================================
+  # issue2md 服务
+  # ===========================================
+  issue2md:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 构建时注入版本信息
+        VERSION: ${VERSION:-dev}
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+    image: issue2md:latest
+    container_name: issue2md
+
+    # 环境变量
+    environment:
+      # GitHub Token（可选，用于访问私有仓库）
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+
+    # 卷挂载（用于输出文件到宿主机）
+    volumes:
+      # 挂载当前目录到容器内，便于输出文件
+      - ./output:/app/output:rw
+
+    # 配置（覆盖默认的 CMD --help）
+    # 使用示例：
+    # docker-compose run issue2md https://github.com/owner/repo/issues/1
+    # docker-compose run issue2md https://github.com/owner/repo/issues/1 output.md
+
+    # 覆盖入口点（如果需要）
+    # entrypoint: ["/app/issue2md"]
+
+  # ===========================================
+  # 辅助服务：构建和运行
+  # ===========================================
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder  # 只构建到 builder 阶段
+    profiles:
+      - tools  # 配置文件 profile，默认不启动

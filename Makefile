@@ -8,13 +8,18 @@ CMD_DIR=cmd/issue2md
 GO=go
 GOFLAGS=-v
 
+# Lint 工具配置
+GOLANGCI_LINT=golangci-lint
+GOLANGCI_LINT_VERSION=v1.60
+LINT_TIMEOUT=5m
+
 # 版本信息（默认值，构建时可覆盖）
 VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 BUILD_DATE?=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 LDFLAGS=-ldflags "-X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE)"
 
 # .PHONY 声明伪目标
-.PHONY: all build test clean run help install fmt check vet
+.PHONY: all build test clean run help install fmt check vet lint lint-fix install-lint docker-build docker-test docker-run
 
 # 默认目标
 all: build
@@ -68,8 +73,40 @@ vet:
 	@echo "Running go vet..."
 	$(GO) vet ./...
 
-## check: 运行代码质量检查（fmt + vet）
-check: fmt vet
+## check: 运行代码质量检查（fmt + vet + lint）
+check: fmt vet lint
+
+## lint: 运行 golangci-lint 静态代码检查
+lint:
+	@echo "Running golangci-lint..."
+	@if ! command -v $(GOLANGCI_LINT) >/dev/null 2>&1; then \
+		echo "golangci-lint is not installed. Run 'make install-lint' to install it."; \
+		exit 1; \
+	fi
+	$(GOLANGCI_LINT) run --timeout=$(LINT_TIMEOUT) --verbose ./...
+
+## lint-fix: 运行 golangci-lint 并自动修复问题
+lint-fix:
+	@echo "Running golangci-lint with fixes..."
+	@if ! command -v $(GOLANGCI_LINT) >/dev/null 2>&1; then \
+		echo "golangci-lint is not installed. Run 'make install-lint' to install it."; \
+		exit 1; \
+	fi
+	$(GOLANGCI_LINT) run --timeout=$(LINT_TIMEOUT) --fix --verbose ./...
+
+## install-lint: 安装 golangci-lint 工具
+install-lint:
+	@echo "Installing golangci-lint..."
+	@if ! command -v $(GOLANGCI_LINT) >/dev/null 2>&1; then \
+		if [ "$$(uname -s)" = "Darwin" ]; then \
+			brew install golangci/tap/golangci-lint; \
+		else \
+			curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin $(GOLANGCI_LINT_VERSION); \
+		fi \
+	else \
+		echo "golangci-lint is already installed: $$(which $(GOLANGCI_LINT))"; \
+	fi
+	@$(GOLANGCI_LINT) version
 
 ## coverage: 生成测试覆盖率报告
 coverage:
@@ -87,3 +124,37 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@sed -n 's/^##//p' $(MAKEFILE_LIST) | column -t -s ':' | sed -e 's/^/ /'
+
+## docker-build: 构建 Docker 镜像
+docker-build:
+	@echo "Building Docker image..."
+	docker build \
+		--build-arg VERSION=$(VERSION) \
+		--build-arg BUILD_DATE=$(BUILD_DATE) \
+		--build-arg GIT_COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown") \
+		-t issue2md:$(VERSION) \
+		-t issue2md:latest \
+		.
+	@echo "Docker image built successfully"
+
+## docker-test: 测试 Docker 镜像
+docker-test: docker-build
+	@echo "Testing Docker image..."
+	@docker run --rm issue2md:$(VERSION) --version
+	@echo "Docker image test passed"
+
+## docker-run: 使用 Docker 运行 issue2md
+docker-run: docker-build
+	@echo "Running issue2md in Docker..."
+	@if [ -z "$(URL)" ]; then \
+		echo "Error: Please provide URL parameter"; \
+		echo "Usage: make docker-run URL=https://github.com/owner/repo/issues/1"; \
+		exit 1; \
+	fi
+	docker run --rm -v $(PWD)/output:/app/output issue2md:$(VERSION) $(URL)
+
+## docker-clean: 清理 Docker 镜像
+docker-clean:
+	@echo "Cleaning Docker images..."
+	docker rmi issue2md:latest issue2md:$(VERSION) 2>/dev/null || true
+	@echo "Docker images cleaned"

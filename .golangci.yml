@@ -1,0 +1,229 @@
+# golangci-lint 配置文件
+# 用于 issue2md 项目的代码质量检查
+
+# 运行配置
+run:
+  # 运行超时时间
+  timeout: 5m
+  # 并发数
+  concurrency: 4
+  # 测试文件也进行检查
+  tests: true
+  # Go 版本
+  go: "1.24"
+  # 排除的目录
+  skip-dirs:
+    - bin
+    - vendor
+    - output
+  # 排除的文件
+  skip-files:
+    - ".*\\.pb\\.go"
+
+# 输出配置
+output:
+  # 输出格式：colored-line-number|line-number|json|tab|checkstyle|code-climate
+  formats:
+    - format: colored-line-number
+  # 打印检查的 linter
+  print-linter-name: true
+  # 排序结果
+  sort-results: true
+
+# 启用的 linters
+linters:
+  # 禁用的 linters
+  disable:
+    - exhaustive  # 过于严格：检查 switch 是否包含所有情况
+    - exhaustivestruct  # 过于严格：检查结构体字段初始化
+    - funlen  # 过于限制函数长度
+    - wsl  # 过于限制空行风格
+    - gocritic  # 部分规则过于严格
+    - godot  # 不强制要求注释以句号结尾
+    - gomnd  # 不检查魔法数字
+    - goerr113  # 不强制使用静态错误
+    - nestif  # 不限制嵌套 if 层数
+    - noctx  # 不强制要求 context 传递
+    - varnamelen  # 不限制变量名长度
+    - nlreturn  # 不限制 return 前空行数量
+    - gofumpt  # gofmt 已经足够
+    - cyclop  # 不限制圈复杂度
+    - errcheck  # go vet 已包含
+    - gosimple  # go vet 已包含
+    - staticcheck  # go vet 已包含
+    - structcheck  # go vet 已包含
+    - typecheck  # go vet 已包含
+    - unused  # go vet 已包含
+    - varcheck  # go vet 已包含
+
+  # 启用的 linters
+  enable:
+    - gofmt  # 代码格式检查
+    - govet  # Go 静态分析（go vet 的包装）
+    - revive  # golint 的替代，更快
+    - gocyclo  # 圈复杂度检查（宽松）
+    - misspell  # 拼写检查
+    - ineffassign  # 检查无效赋值
+    - deadcode  # 检查未使用的代码
+    - unconvert  # 检查不必要的类型转换
+    - gosec  # 安全检查
+    - gci  # import 分组和排序
+    - prealloc  # 检查可以预分配的 slice
+    - exportloopref  # 检查循环变量引用问题
+    - nilerr  # 检查返回 nil error 的情况
+
+linters-settings:
+  # gocyclo - 圈复杂度
+  gocyclo:
+    # 最低复杂度（推荐 15-25）
+    min-complexity: 20
+
+  # revive - 代码风格检查
+  revive:
+    # 启用的规则
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+  # misspell - 拼写检查
+  misspell:
+    # 区域设置
+    locale: US
+    # 忽略的单词
+    ignore-words:
+      - someword
+
+  # govet - Go 静态分析
+  govet:
+    # 启用所有检查
+    enable-all: true
+    # 禁用某些检查
+    disable:
+      - shadow  # 可能会产生误报
+      - fieldalignment  # 不强制对齐优化
+
+  # gosec - 安全检查
+  gosec:
+    # 启用所有规则
+    includes:
+      - G101  # 查找硬编码凭证
+      - G102  # 绑定到所有接口
+      - G103  # 审计分支或子进程
+      - G104  # 审计错误
+      - G106  # SSH 主机密钥验证
+      - G107  # URL 提供的 SSH 转发
+      - G108  # 分析 goroutine 中的错误
+      - G109  # 分析 strconv 解析错误
+      - G110  # 分析整数溢出
+      - G201  # SQL 查询构建
+      - G202  # SQL 查询字符串连接
+      - G203  # 模板构建
+      - G204  # 审计执行
+      - G301  # 文件权限最小化
+      - G302  # 文件权限最小化
+      - G303  # 创建临时文件
+      - G304  # 文件路径来自变量
+      - G305  # 文件遍历
+      - G306  # 写入文件权限
+      - G307  # defer 方法指针
+      - G401  # 检测 DES 或 RC4 等不安全的加密
+      - G402  # TLS 配置不当
+      - G403  # TLS 最小版本
+      - G404  # 不安全的随机数
+      - G501  # 阻止加密导入
+      - G502  # 阻止弱加密导入
+      - G503  # 阻止弱加密导入
+      - G504  # 不安全的网络协议
+      - G505  # 阻止弱加密导入
+    # 排除的文件
+    exclude-generated: true
+
+  # gci - import 分组和排序
+  gci:
+    # 自定义导入分组
+    sections:
+      - Standard   # 标准库
+      - Default   # 所有其他导入
+      - Prefix(github.com/wuwenrufeng/issue2md)  # 项目内部包
+    # 跳过生成的文件
+    skip-generated: true
+
+  # prealloc - 预分配 slice
+  prealloc:
+    # 报告简单循环中的预分配
+    simple: true
+    # 报告 range 循环中的预分配
+    range-loops: true
+    # 报告 for 循环中的预分配
+    for-loops: false
+
+# 问题配置
+issues:
+  # 最大 issues 数（0 表示无限制）
+  max-issues-per-linter: 0
+  # 最大同个问题的数量
+  max-same-issues: 0
+
+  # 显示所有问题
+  exclude-use-default: false
+
+  # 排除规则
+  exclude-rules:
+    # 排除测试文件中的某些检查
+    - path: _test\.go
+      linters:
+        - gocyclo  # 测试代码可能有更高的圈复杂度
+        - deadcode  # 测试辅助函数可能看起来未使用
+        - prealloc  # 测试中不需要优化
+
+    # 排除生成的代码
+    - path: internal/cli/version.go
+      linters:
+        - deadcode  # Version 变量可能看起来未使用
+
+    # 排除 main.go 的某些检查
+    - path: cmd/issue2md/main.go
+      linters:
+        - deadcode  # main 函数的某些变量可能看起来未使用
+
+  # 独立排除某些问题
+  exclude:
+    # 排除某些特定的问题
+    - "G104: Errors unhandled"  # 我们在项目宪法中明确要求显式处理错误
+    - "G101: Potential hardcoded credentials"  # 测试文件中可能有示例 token
+
+# 严重性配置
+severity:
+  # 默认严重性
+  default-severity: error
+
+  # 规则覆盖
+  rules:
+    - linters:
+        - misspell
+      severity: warning
+    - linters:
+        - gocyclo
+      severity: warning
