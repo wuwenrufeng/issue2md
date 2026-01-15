@@ -40,28 +40,46 @@ jobs:
         id: build
         run: make build 2>&1 | tee build.log
 
+      # 收集失败日志（仅在前面步骤失败时执行）
+      - name: Collect failure logs
+        if: failure()
+        run: |
+          {
+            echo "分析以下 CI 失败日志并提供修复建议："
+            echo ""
+
+            if [ "${{ steps.test.outcome }}" == "failure" ]; then
+              echo "=== 测试失败 ==="
+              cat test.log
+              echo ""
+            fi
+
+            if [ "${{ steps.lint.outcome }}" == "failure" ]; then
+              echo "=== Lint 失败 ==="
+              cat lint.log
+              echo ""
+            fi
+
+            if [ "${{ steps.build.outcome }}" == "failure" ]; then
+              echo "=== 构建失败 ==="
+              cat build.log
+              echo ""
+            fi
+
+            echo "请："
+            echo "  1. 找出失败的根因"
+            echo "  2. 给出具体的修复步骤"
+            echo "  3. 如果需要更多信息，列出缺少的信息"
+          } > failure-summary.txt
+
       # 失败时才触发 Claude 诊断
       - name: AI Code Analysis (on failure)
         if: failure()
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
-          prompt: |
-            分析以下 CI 失败日志并提供修复建议：
-
-            ${{ steps.test.outcome == 'failure' && '=== 测试失败 ===\n' || '' }}
-            ${{ steps.test.outcome == 'failure' && format('{0}', test.log) || '' }}
-
-            ${{ steps.lint.outcome == 'failure' && '=== Lint 失败 ===\n' || '' }}
-            ${{ steps.lint.outcome == 'failure' && format('{0}', lint.log) || '' }}
-
-            ${{ steps.build.outcome == 'failure' && '=== 构建失败 ===\n' || '' }}
-            ${{ steps.build.outcome == 'failure' && format('{0}', build.log) || '' }}
-
-            请：
-              1. 找出失败的根因
-              2. 给出具体的修复步骤
-              3. 如果需要更多信息，列出缺少的信息
+          prompt: ""
+          input_file: failure-summary.txt
 
           settings: |
             {
