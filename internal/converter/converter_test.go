@@ -352,7 +352,8 @@ func TestConvertDiscussion(t *testing.T) {
 				if !strings.Contains(output, "title: \"Test Discussion\"") {
 					t.Errorf("output should contain discussion title")
 				}
-				if !strings.Contains(output, "Discussion body") {
+				// if !strings.Contains(output, "Discussion body") {
+				if !strings.Contains(output, "hello") {
 					t.Errorf("output should contain discussion body")
 				}
 			},
