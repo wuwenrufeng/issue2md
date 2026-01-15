@@ -25,14 +25,47 @@ jobs:
 
       - name: Install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.60
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin latest
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Run tests
-        run: make test
+        run: make test 2>&1 | tee test.log
 
       - name: Run lint
-        run: make lint
+        run: make lint 2>&1 | tee lint.log
 
       - name: Run build
-        run: make build
+        run: make build 2>&1 | tee build.log
+
+      # 失败时才触发 Claude 诊断
+      - name: AI Code Analysis (on failure)
+        if: failure()
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          prompt: |
+            分析以下 CI 失败日志并提供修复建议：
+
+            ${{ steps.test.outcome == 'failure' && '=== 测试失败 ===\n' || '' }}
+            ${{ steps.test.outcome == 'failure' && format('{0}', files.test.log) || '' }}
+
+            ${{ steps.lint.outcome == 'failure' && '=== Lint 失败 ===\n' || '' }}
+            ${{ steps.lint.outcome == 'failure' && format('{0}', files.lint.log) || '' }}
+
+            ${{ steps.build.outcome == 'failure' && '=== 构建失败 ===\n' || '' }}
+            ${{ steps.build.outcome == 'failure' && format('{0}', files.build.log) || '' }}
+
+            请：
+              1. 找出失败的根因
+              2. 给出具体的修复步骤
+              3. 如果需要更多信息，列出缺少的信息
+
+          settings: |
+            {
+              "env": {
+                "ANTHROPIC_AUTH_TOKEN": "${{ secrets.ANTHROPIC_AUTH_TOKEN }}",
+                "ANTHROPIC_BASE_URL": "${{ vars.ANTHROPIC_BASE_URL }}",
+                "API_TIMEOUT_MS": "${{ vars.API_TIMEOUT_MS }}",
+                "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "${{ vars.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC }}"
+              }
+            }
