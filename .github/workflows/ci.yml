@@ -30,15 +30,21 @@ jobs:
 
       - name: Run tests
         id: test
-        run: make test 2>&1 | tee test.log
+        run: |
+          set -o pipefail
+          make test 2>&1 | tee test.log
 
       - name: Run lint
         id: lint
-        run: make lint 2>&1 | tee lint.log
+        run: |
+          set -o pipefail
+          make lint 2>&1 | tee lint.log
 
       - name: Run build
         id: build
-        run: make build 2>&1 | tee build.log
+        run: |
+          set -o pipefail
+          make build 2>&1 | tee build.log
 
       # 收集失败日志（仅在前面步骤失败时执行）
       - name: Collect failure logs
