@@ -29,12 +29,15 @@ jobs:
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Run tests
+        id: test
         run: make test 2>&1 | tee test.log
 
       - name: Run lint
+        id: lint
         run: make lint 2>&1 | tee lint.log
 
       - name: Run build
+        id: build
         run: make build 2>&1 | tee build.log
 
       # 失败时才触发 Claude 诊断
@@ -47,13 +50,13 @@ jobs:
             分析以下 CI 失败日志并提供修复建议：
 
             ${{ steps.test.outcome == 'failure' && '=== 测试失败 ===\n' || '' }}
-            ${{ steps.test.outcome == 'failure' && format('{0}', files.test.log) || '' }}
+            ${{ steps.test.outcome == 'failure' && format('{0}', test.log) || '' }}
 
             ${{ steps.lint.outcome == 'failure' && '=== Lint 失败 ===\n' || '' }}
-            ${{ steps.lint.outcome == 'failure' && format('{0}', files.lint.log) || '' }}
+            ${{ steps.lint.outcome == 'failure' && format('{0}', lint.log) || '' }}
 
             ${{ steps.build.outcome == 'failure' && '=== 构建失败 ===\n' || '' }}
-            ${{ steps.build.outcome == 'failure' && format('{0}', files.build.log) || '' }}
+            ${{ steps.build.outcome == 'failure' && format('{0}', build.log) || '' }}
 
             请：
               1. 找出失败的根因
