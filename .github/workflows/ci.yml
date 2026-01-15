@@ -28,6 +28,17 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin latest
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
+      - name: Install Claude CLI (native installer)
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.claude/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Verify Claude CLI
+        run: |
+          which claude
+          claude --version
+
       - name: Run tests
         id: test
         run: |
@@ -81,18 +92,11 @@ jobs:
       # 失败时才触发 Claude 诊断
       - name: AI Code Analysis (on failure)
         if: failure()
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
-          prompt: ""
-          input_file: failure-summary.txt
-
-          settings: |
-            {
-              "env": {
-                "ANTHROPIC_AUTH_TOKEN": "${{ secrets.ANTHROPIC_AUTH_TOKEN }}",
-                "ANTHROPIC_BASE_URL": "${{ vars.ANTHROPIC_BASE_URL }}",
-                "API_TIMEOUT_MS": "${{ vars.API_TIMEOUT_MS }}",
-                "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "${{ vars.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC }}"
-              }
-            }
+        env:
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          API_TIMEOUT_MS: ${{ vars.API_TIMEOUT_MS }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: ${{ vars.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC }}
+        run: |
+          echo "## Claude 诊断结果" >> $GITHUB_STEP_SUMMARY
+          cat failure-summary.txt | claude -p "将诊断结果用 Markdown 输出（含根因与修复步骤）。" >> $GITHUB_STEP_SUMMARY
